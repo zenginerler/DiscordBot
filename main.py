@@ -3,8 +3,9 @@ import os
 import random
 import requests
 import json
+from replit import db
 from discord.ext import commands
-
+from keep_alive import keep_alive
 
 client = commands.Bot(command_prefix = '>')
 
@@ -74,4 +75,16 @@ def get_quote():
     return quote 
 
 
+# this is a function that is being tested!
+def update_something(new_data):
+    if "test_key" in db.keys():
+        retrieved_data = db["test_key"]
+        retrieved_data.append(new_data)
+        db["test_key"] = retrieved_data
+    else:
+        db["test_key"] = [new_data]
+
+
+
+keep_alive()
 client.run(os.getenv('TOKEN'))
