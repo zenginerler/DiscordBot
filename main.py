@@ -55,13 +55,6 @@ async def eightBall(ctx, *, question):
     await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
 
 
-@client.command(aliases=['inspireMe'])
-async def quote(ctx):
-    """Prints a random quote"""
-    quote = get_quote()
-    await ctx.send(quote)
-
-
 @client.command(aliases=['f', 'F'])
 async def payRespect(ctx):
     """Pays respect"""
@@ -75,6 +68,20 @@ async def flipACoin(ctx):
     await ctx.send(f'{ctx.author.name} flipped a coin! \nCoin: **{random.choice(outcomes)}**')
 
 
+@client.command(aliases=['kitty'])
+async def cat(ctx):
+    """Sends a random cat image"""
+    image = get_cat()
+    await ctx.send(image)
+
+
+@client.command(aliases=['inspireMe'])
+async def quote(ctx):
+    """Prints a random quote"""
+    quote = get_quote()
+    await ctx.send(quote)
+
+
 @client.command(aliases=['define', 'urban'])
 async def urbanDictionary(ctx, *, word):
     """Searches a definition for a given word"""
@@ -82,13 +89,19 @@ async def urbanDictionary(ctx, *, word):
         definition = "Greatest abi ever!" 
     else:
         definition = get_definition(word)
-    await ctx.send(f'Most popular definitions for **{word}** in Urban Dictionary: \n\n{definition}')
+    await ctx.send(f'The most popular definition for **{word}** in Urban Dictionary: \n\n{definition}')
 
 
 @client.command(aliases=['helpMe'])
 async def helpMessage(ctx):
     """Shows the command prefix and possible commands"""
-    await ctx.send('Command Prefix: **>** \nPossible Commands: **askme, quote/inspireMe, flip, define/urban, F, ping, helpMe**')
+    await ctx.send('Command Prefix: **>** \nPossible Commands: **askme, quote/inspireMe, flip, define/urban, cat, F, ping, helpMe**')
+
+
+def get_cat():
+    response = requests.get("https://api.thecatapi.com/v1/images/search")
+    json_data = json.loads(response.text)
+    return json_data[0]['url']
 
 
 def get_quote():
@@ -108,7 +121,7 @@ def get_definition(word):
     return result
 
 
-# this is a function that is being tested!
+# this is a datbase function that is being tested!
 def update_something(new_data):
     if "test_key" in db.keys():
         retrieved_data = db["test_key"]
