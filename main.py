@@ -18,17 +18,20 @@ async def on_ready(): # makes the bot work/online
 
 @client.command()
 async def ping(ctx):
+    """Prints the latency of a Bot"""
     await ctx.send(f'My current latency: {round(client.latency * 1000)}ms')
 
 
 @client.command()
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, amount=2):
+    """Clears the message above"""
     await ctx.channel.purge(limit=amount)
 
 
-@client.command(aliases=['askme'])
-async def yesNo(ctx, *, question):
+@client.command(aliases=['askme', 'yesNo'])
+async def eightBall(ctx, *, question):
+    """Allows author to play a 8ball game"""
     responses = ["It is certain.",
                 "It is decidedly so.",
                 "Without a doubt.",
@@ -54,18 +57,38 @@ async def yesNo(ctx, *, question):
 
 @client.command(aliases=['inspireMe'])
 async def quote(ctx):
+    """Prints a random quote"""
     quote = get_quote()
     await ctx.send(quote)
 
 
-@client.command()
-async def test1(ctx):
-    await ctx.send('This function is under development')
+@client.command(aliases=['f', 'F'])
+async def payRespect(ctx):
+    """Pays respect"""
+    await ctx.send(f'{ctx.author.name} has paid their respect!')
 
 
-@client.command()
-async def test2(ctx):
-    await ctx.send('This function is under development')
+@client.command(aliases=['flip', 'coin'])
+async def flipACoin(ctx):
+    """Flips a coin"""
+    outcomes = ['Tails', 'Heads']
+    await ctx.send(f'{ctx.author.name} flipped a coin! \nCoin: **{random.choice(outcomes)}**')
+
+
+@client.command(aliases=['define', 'urban'])
+async def urbanDictionary(ctx, *, word):
+    """Searches a definition for a given word"""
+    if word == "Yavuz" or word == "yavuz":
+        definition = "Greatest abi ever!" 
+    else:
+        definition = get_definition(word)
+    await ctx.send(f'Most popular definitions for **{word}** in Urban Dictionary: \n\n{definition}')
+
+
+@client.command(aliases=['helpMe'])
+async def helpMessage(ctx):
+    """Shows the command prefix and possible commands"""
+    await ctx.send('Command Prefix: **>** \nPossible Commands: **askme, quote/inspireMe, flip, define/urban, F, ping, helpMe**')
 
 
 def get_quote():
@@ -73,6 +96,16 @@ def get_quote():
     json_data = json.loads(response.text)
     quote = json_data[0]['q'] + " -" + json_data[0]['a']
     return quote 
+
+
+def get_definition(word):
+    response = requests.get(f'https://api.urbandictionary.com/v0/define?term={word}')
+    json_data = json.loads(response.text)
+    try:
+        result = json_data['list'][0]['definition']
+    except Exception:
+        result = 'Try again please!'
+    return result
 
 
 # this is a function that is being tested!
