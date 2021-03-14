@@ -25,7 +25,7 @@ async def ping(ctx):
 
 @client.command()
 @commands.has_permissions(manage_messages=True)
-async def clear(ctx, amount=6):
+async def clear(ctx, amount=25):
     """Clears the specified number of messages"""
     await ctx.channel.purge(limit=amount)
 
